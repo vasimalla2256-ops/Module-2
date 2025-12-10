@@ -1,0 +1,75 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(RotationClockApp());
+
+class RotationClockApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(home: RotationClockScreen());
+  }
+}
+
+class RotationClockScreen extends StatefulWidget {
+  @override
+  _RotationClockScreenState createState() => _RotationClockScreenState();
+}
+
+class _RotationClockScreenState extends State<RotationClockScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  bool clockwise = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1), // rotation duration
+      lowerBound: -1.0,
+      upperBound: 1.0,
+    );
+  }
+
+  void rotateClock() {
+    setState(() {
+      clockwise = !clockwise; // toggle direction
+    });
+
+    if (clockwise) {
+      _controller.forward(from: _controller.value); // rotate clockwise
+    } else {
+      _controller.reverse(from: _controller.value); // rotate anti-clockwise
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Rotating Clock')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RotationTransition(
+              turns: _controller,
+              child: Image.network(
+                  'https://cdn-icons-png.flaticon.com/512/61/61112.png',
+                  width: 200),
+            ),
+            SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: rotateClock,
+              child: Text('Rotate Clock/Anti-clockwise'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
