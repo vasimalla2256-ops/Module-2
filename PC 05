@@ -1,0 +1,92 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int counter = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Counter + Wrap Layout Example"),
+      ),
+
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// Counter Display
+            Text(
+              "Counter Value: $counter",
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 30),
+
+            const Text(
+              "Product Cards (Wrap Layout):",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 10),
+
+            /// ---------- WRAP WIDGET ----------
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: List.generate(8, (index) {
+                return Container(
+                  width: 150,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade100,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Product ${index + 1}",
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+
+      /// ---------- FLOATING BUTTON (increments by 10 using i = i * 10) ----------
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            counter = counter * 10; // Test case 1 requirement
+          });
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
