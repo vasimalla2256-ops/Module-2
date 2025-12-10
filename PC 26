@@ -1,0 +1,131 @@
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'AlertDialog Form',
+      home: FormScreen(),
+    );
+  }
+}
+
+class FormScreen extends StatefulWidget {
+  @override
+  _FormScreenState createState() => _FormScreenState();
+}
+
+class _FormScreenState extends State<FormScreen> {
+  // Controllers for form fields
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+
+  // Variables to store data for UI
+  String name = '';
+  String lastName = '';
+  String email = '';
+  String phone = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  // Load data from SharedPreferences
+  _loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString('name') ?? '';
+      lastName = prefs.getString('lastName') ?? '';
+      email = prefs.getString('email') ?? '';
+      phone = prefs.getString('phone') ?? '';
+    });
+  }
+
+  // Save data to SharedPreferences
+  _saveData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('name', _nameController.text);
+    await prefs.setString('lastName', _lastNameController.text);
+    await prefs.setString('email', _emailController.text);
+    await prefs.setString('phone', _phoneController.text);
+
+    _loadData(); // Refresh UI
+  }
+
+  // Show AlertDialog Form
+  _showFormDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Enter Your Details'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration: InputDecoration(labelText: 'Name'),
+                ),
+                TextFormField(
+                  controller: _lastNameController,
+                  decoration: InputDecoration(labelText: 'Last Name'),
+                ),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(labelText: 'Email'),
+                ),
+                TextFormField(
+                  controller: _phoneController,
+                  decoration: InputDecoration(labelText: 'Phone Number'),
+                  keyboardType: TextInputType.phone,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                _saveData();
+                Navigator.of(context).pop();
+              },
+              child: Text('Submit'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('AlertDialog Form Example')),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ElevatedButton(
+              onPressed: _showFormDialog,
+              child: Text('Open Form'),
+            ),
+            SizedBox(height: 20),
+            Text('Name: $name'),
+            Text('Last Name: $lastName'),
+            Text('Email: $email'),
+            Text('Phone: $phone'),
+          ],
+        ),
+      ),
+    );
+  }
+}
