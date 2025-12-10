@@ -1,0 +1,40 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  // Step 1: Declare the number list
+  final List<int> numberList = [10, 12, 13, 56, 27, 29, 30];
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Odd & Even Numbers',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Odd & Even Numbers'),
+        ),
+        body: ListView.builder(
+          // Step 3: Use ListView.builder to show the data
+          itemCount: numberList.length,
+          itemBuilder: (context, index) {
+            int number = numberList[index];
+            bool isEven = number % 2 == 0; // Step 2: Check if divisible by 2
+
+            return ListTile(
+              title: Text(
+                number.toString(),
+                style: TextStyle(
+                  color: isEven ? Colors.green : Colors.red,
+                  fontSize: 20,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
