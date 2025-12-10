@@ -1,0 +1,85 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const SlideImageApp());
+}
+
+class SlideImageApp extends StatelessWidget {
+  const SlideImageApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SlideImageScreen(),
+    );
+  }
+}
+
+class SlideImageScreen extends StatefulWidget {
+  @override
+  State<SlideImageScreen> createState() => _SlideImageScreenState();
+}
+
+class _SlideImageScreenState extends State<SlideImageScreen>
+    with SingleTickerProviderStateMixin {
+
+  late AnimationController _controller;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 900),
+      vsync: this,
+    );
+
+    // Slide from left → to center
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(-1.5, 0),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutExpo),
+    );
+
+    // Start animation automatically
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: SlideTransition(
+          position: _slideAnimation,
+          child: Container(
+            width: 300,
+            height: 300,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              image: const DecorationImage(
+                image: AssetImage("assets/sample.jpg"), // <-- Replace with your image
+                fit: BoxFit.cover,
+              ),
+              boxShadow: const [
+                BoxShadow(
+                  blurRadius: 20,
+                  color: Colors.black26,
+                  offset: Offset(0, 10),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
