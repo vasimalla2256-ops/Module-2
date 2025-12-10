@@ -1,0 +1,96 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => StringListProvider(),
+      child: MyApp(),
+    ),
+  );
+}
+
+// Provider class to manage list of strings
+class StringListProvider extends ChangeNotifier {
+  List<String> _items = [];
+
+  List<String> get items => _items;
+
+  void addItem(String value) {
+    if (value.isNotEmpty) {
+      _items.add(value);
+      notifyListeners(); // Notify UI to rebuild
+    }
+  }
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: StringListScreen(),
+    );
+  }
+}
+
+class StringListScreen extends StatefulWidget {
+  @override
+  _StringListScreenState createState() => _StringListScreenState();
+}
+
+class _StringListScreenState extends State<StringListScreen> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    final stringProvider = Provider.of<StringListProvider>(context);
+
+    return Scaffold(
+      appBar: AppBar(title: Text('Provider String List Example')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // TextField to enter new string
+            TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                labelText: 'Enter a string',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                stringProvider.addItem(_controller.text);
+                _controller.clear();
+              },
+              child: Text('Add String'),
+            ),
+            SizedBox(height: 20),
+            // Display the list in another widget
+            Expanded(child: StringListDisplay()),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Widget to display the list of strings
+class StringListDisplay extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final items = Provider.of<StringListProvider>(context).items;
+
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          leading: CircleAvatar(child: Text('${index + 1}')),
+          title: Text(items[index]),
+        );
+      },
+    );
+  }
+}
