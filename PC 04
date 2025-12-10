@@ -1,0 +1,52 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Responsive Wrap Demo',
+      home: ProductPage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class ProductPage extends StatelessWidget {
+  final List<String> products =
+      List.generate(20, (i) => "Product ${i + 1}");
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Products")),
+
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(12),
+        child: Wrap(
+          spacing: 12,       // space between cards horizontally
+          runSpacing: 12,    // space between rows
+          children: products.map((p) {
+            return ProductCard(title: p);
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}
+
+class ProductCard extends StatelessWidget {
+  final String title;
+  const ProductCard({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
+    // Responsive width logic
+    double cardWidth =
+        width > 1000 ? width / 4 - 20 :   // Desktop: 4 per row
+        width > 700  ? width / 3 - 20 :   // Tablet: 3 per row
