@@ -1,0 +1,54 @@
+import 'dart:math';
+import 'package:flutter/material.dart';
+
+void main() => runApp(LuckyNumberApp());
+
+class LuckyNumberApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(home: LuckyNumberScreen());
+  }
+}
+
+class LuckyNumberScreen extends StatefulWidget {
+  @override
+  _LuckyNumberScreenState createState() => _LuckyNumberScreenState();
+}
+
+class _LuckyNumberScreenState extends State<LuckyNumberScreen> {
+  int luckyNumber = 0;
+
+  void generateLuckyNumber() {
+    setState(() {
+      luckyNumber = Random().nextInt(351); // generates number 0 to 350
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Random Lucky Number')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Your Lucky Number:',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            Text(
+              '$luckyNumber',
+              style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, color: Colors.blue),
+            ),
+            SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: generateLuckyNumber,
+              child: Text('Generate Lucky Number'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
