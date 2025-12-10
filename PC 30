@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: TextFormFieldExample(),
+    );
+  }
+}
+
+class TextFormFieldExample extends StatefulWidget {
+  @override
+  _TextFormFieldExampleState createState() => _TextFormFieldExampleState();
+}
+
+class _TextFormFieldExampleState extends State<TextFormFieldExample> {
+  // Variable to store user input
+  String userInput = '';
+
+  // Controller (optional)
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('TextFormField Example')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // TextFormField with label
+            TextFormField(
+              controller: _controller,
+              decoration: InputDecoration(
+                labelText: 'Enter your name',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                // Save user input to variable
+                setState(() {
+                  userInput = value;
+                });
+              },
+            ),
+            SizedBox(height: 20),
+            // Display the entered input
+            Text(
+              'You entered: $userInput',
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
