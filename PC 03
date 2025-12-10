@@ -1,0 +1,108 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "Responsive Product Wrap Demo",
+      home: ProductPage(),
+    );
+  }
+}
+
+class ProductPage extends StatelessWidget {
+  final List<String> products =
+      List.generate(20, (i) => "Product ${i + 1}");
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Products")),
+
+      // Prevent bottom overflow
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: products.map((p) {
+              return ProductCard(name: p);
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// -----------------------------
+// PRODUCT CARD WITH DECORATION
+// -----------------------------
+class ProductCard extends StatelessWidget {
+  final String name;
+  const ProductCard({required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
+    double cardWidth =
+        width > 900 ? width / 4 - 20 :      // Desktop
+        width > 600 ? width / 3 - 20 :      // Tablet
+                      width / 2 - 20;       // Mobile
+
+    return Container(
+      width: cardWidth,
+      padding: EdgeInsets.all(16),
+
+      // 🔥 Correct answer: Container with decoration property
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade400, width: 1.2),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 4,
+            offset: Offset(2, 2),
+          )
+        ],
+      ),
+
+      child: Column(
+        children: [
+          Icon(Icons.shopping_bag, size: 60, color: Colors.blue),
+          SizedBox(height: 10),
+          Text(
+            name,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          SizedBox(height: 12),
+
+          // 🔥 The "box with text" like q03.png
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.blue, width: 1.5),
+              color: Colors.blue.shade50,
+            ),
+            child: Text(
+              "Special Offer",
+              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
