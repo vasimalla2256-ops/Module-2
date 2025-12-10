@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => FormDataProvider(),
+      child: MyApp(),
+    ),
+  );
+}
+
+// Provider class to store form data
+class FormDataProvider extends ChangeNotifier {
+  String firstName = '';
+  String lastName = '';
+
+  void updateData(String fName, String lName) {
+    firstName = fName;
+    lastName = lName;
+    notifyListeners();
+  }
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: FormScreen(),
+    );
+  }
+}
+
+class FormScreen extends StatefulWidget {
+  @override
+  _FormScreenState createState() => _FormScreenState();
+}
+
+class _FormScreenState extends State<FormScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+
+  void _submitForm(BuildContext context) {
+    if (_formKey.currentState!.validate()) {
+      // Update provider data
+      Provider.of<FormDataProvider>(context, listen: false).updateData(
+        _firstNameController.text,
+        _lastNameController.text,
+      );
+
+      // Navigate to display screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => DisplayScreen()),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Form with Provider')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              // First Name Field
+              TextFormField(
+                controller: _firstNameController,
+                decoration: InputDecoration(labelText: 'First Name'),
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter first name' : null,
+              ),
+              SizedBox(height: 16),
+              // Last Name Field
+              TextFormField(
+                controller: _lastNameController,
+                decoration: InputDecoration(labelText: 'Last Name'),
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter last name' : null,
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => _submitForm(context),
+                child: Text('Submit'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Widget to display the form data using Provider
+class DisplayScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final formData = Provider.of<FormDataProvider>(context);
+
+    return Scaffold(
+      appBar: AppBar(title: Text('Form Data')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Text('First Name: ${formData.firstName}',
+                style: TextStyle(fontSize: 18)),
+            SizedBox(height: 10),
+            Text('Last Name: ${formData.lastName}',
+                style: TextStyle(fontSize: 18)),
+          ],
+        ),
+      ),
+    );
+  }
+}
