@@ -1,0 +1,94 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const HoverTextWrapExample(),
+    );
+  }
+}
+
+class HoverTextWrapExample extends StatefulWidget {
+  const HoverTextWrapExample({super.key});
+
+  @override
+  State<HoverTextWrapExample> createState() => _HoverTextWrapExampleState();
+}
+
+class _HoverTextWrapExampleState extends State<HoverTextWrapExample> {
+  bool isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Hover Animated Text + Wrap Layout")),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            /// -----------------------------------------------------------------
+            /// HOVER → ANIMATED TEXT
+            /// -----------------------------------------------------------------
+            MouseRegion(
+              onEnter: (_) => setState(() => isHovered = true),
+              onExit: (_) => setState(() => isHovered = false),
+              child: AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+
+                style: TextStyle(
+                  fontSize: isHovered ? 40 : 28,
+                  fontWeight: isHovered ? FontWeight.bold : FontWeight.w500,
+                  color: isHovered ? Colors.blue : Colors.black,
+                ),
+
+                child: const Text("Hover Over Me"),
+              ),
+            ),
+
+            const SizedBox(height: 40),
+
+            /// -----------------------------------------------------------------
+            /// WRAP LAYOUT (PRODUCT CARDS)
+            /// -----------------------------------------------------------------
+            const Text(
+              "Product Cards (Wrap Layout)",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 16),
+
+            Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              children: List.generate(8, (index) {
+                return Container(
+                  width: 150,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade100,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Product ${index + 1}",
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
