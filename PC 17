@@ -1,0 +1,37 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io' show Platform;
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(home: PlatformTextScreen());
+  }
+}
+
+class PlatformTextScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    String displayText;
+
+    if (kIsWeb) {
+      displayText = "This is for the web!!";
+    } else if (Platform.isAndroid) {
+      displayText = "This is for android!!";
+    } else {
+      displayText = "This platform is not targeted";
+    }
+
+    return Scaffold(
+      appBar: AppBar(title: Text('Platform-specific Text')),
+      body: Center(
+        child: Text(
+          displayText,
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+}
