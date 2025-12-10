@@ -1,0 +1,94 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const GlowContainerExample(),
+    );
+  }
+}
+
+class GlowContainerExample extends StatelessWidget {
+  const GlowContainerExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Glowing Container + Wrap Layout")),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            /// -----------------------------------------------------
+            ///  GLOWING CONTAINER (matches your screenshot)
+            /// -----------------------------------------------------
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+              decoration: BoxDecoration(
+                color: Colors.tealAccent,
+                borderRadius: BorderRadius.circular(40),
+
+                // Pink glow effect
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 255, 0, 225), // Pink glow
+                    blurRadius: 30,
+                    spreadRadius: 5,
+                  )
+                ],
+              ),
+              child: const Text(
+                "Hello I'm",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 40),
+
+            /// -----------------------------------------------------
+            ///  WRAP LAYOUT (Products)
+            /// -----------------------------------------------------
+            const Text(
+              "Product Cards (Wrap Layout)",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 16),
+
+            Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              children: List.generate(8, (index) {
+                return Container(
+                  width: 150,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade100,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Product ${index + 1}",
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
