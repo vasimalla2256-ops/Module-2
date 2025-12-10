@@ -1,0 +1,67 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Product Grid Demo',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Products'),
+        ),
+        body: ProductGrid(),
+      ),
+    );
+  }
+}
+
+class ProductGrid extends StatelessWidget {
+  // Sample product data
+  final List<String> products = List<String>.generate(20, (i) => 'Product ${i + 1}');
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(8),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: products.map((name) {
+          return ProductCard(name: name);
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class ProductCard extends StatelessWidget {
+  final String name;
+  const ProductCard({Key? key, required this.name}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Calculate width depending on screen size
+    double width = MediaQuery.of(context).size.width;
+    double cardWidth = width / 2 - 16;      // two items per row on narrow view
+    if (width > 800) {
+      cardWidth = width / 4 - 16;          // four items per row on wide view
+    }
+
+    return Container(
+      width: cardWidth,
+      padding: EdgeInsets.all(8),
+      color: Colors.grey[200],
+      child: Column(
+        children: [
+          Icon(Icons.shopping_bag, size: 48),
+          SizedBox(height: 8),
+          Text(name, style: TextStyle(fontSize: 16)),
+        ],
+      ),
+    );
+  }
+}
