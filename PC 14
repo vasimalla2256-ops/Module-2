@@ -1,0 +1,92 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(home: FormExample());
+  }
+}
+
+class FormExample extends StatefulWidget {
+  @override
+  _FormExampleState createState() => _FormExampleState();
+}
+
+class _FormExampleState extends State<FormExample> {
+  final _formKey = GlobalKey<FormBuilderState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('FormBuilder Example')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: FormBuilder(
+          key: _formKey,
+          child: Column(
+            children: [
+              FormBuilderTextField(
+                name: 'firstName',
+                decoration: InputDecoration(labelText: 'First Name'),
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.minLength(5),
+                  FormBuilderValidators.maxLength(15),
+                ]),
+              ),
+              SizedBox(height: 16),
+              FormBuilderTextField(
+                name: 'lastName',
+                decoration: InputDecoration(labelText: 'Last Name'),
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.minLength(5),
+                  FormBuilderValidators.maxLength(15),
+                ]),
+              ),
+              SizedBox(height: 16),
+              FormBuilderTextField(
+                name: 'email',
+                decoration: InputDecoration(labelText: 'Email'),
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.email(),
+                ]),
+              ),
+              SizedBox(height: 16),
+              FormBuilderTextField(
+                name: 'phoneNumber',
+                decoration: InputDecoration(labelText: 'Phone Number'),
+                keyboardType: TextInputType.number,
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.pattern(
+                      r'^[0-9]{10}$', errorText: 'Enter a valid 10-digit number'),
+                ]),
+              ),
+              SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState?.saveAndValidate() ?? false) {
+                    print(_formKey.currentState?.value);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Form is valid!')),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Validation failed')),
+                    );
+                  }
+                },
+                child: Text('Submit'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
